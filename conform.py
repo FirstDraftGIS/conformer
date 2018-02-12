@@ -26,8 +26,6 @@ with open(input_path) as input_file:
     count = 0
     for line in reader:
         count += 1
-        if count > 1000000:
-            exit()
         line["id"] = count
         line["point"] = "SRID=4326;POINT (" + line['longitude'] + " " + line["latitude"] + ")"
         for inkey, outkey in mapping:
