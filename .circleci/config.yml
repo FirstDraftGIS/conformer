@@ -20,6 +20,7 @@ jobs:
             - run:
                 name: conform unum to place model
                 command: python3 conform.py
+                no_output_timeout: 5h                
             - run:
                 name: run tests
                 command: echo "will write tests later"
@@ -29,6 +30,7 @@ jobs:
             - run:
                 name: Zip Results
                 command: cd /tmp && zip -r conformed.tsv.zip conformed.tsv
+                no_output_timeout: 1h                
             - run:
                 name: Upload to S3
                 command: aws s3 cp /tmp/conformed.tsv.zip s3://firstdraftgis/conformed.tsv.zip
