@@ -1,0 +1,31 @@
+version: 2
+jobs:
+    build:
+        docker:
+            - image: python:latest
+        steps:
+            - checkout
+            - run:
+                name: Install Other System Dependencies
+                command: apt-get install -y unzip zip
+            - run:
+                name: Download unum
+                command: cd /tmp && wget https://s3.amazonaws.com/firstdraftgis/unum.tsv.zip
+            - run:
+                name: Unzip Unum
+                command: cd /tmp && unzip unum.tsv.zip
+            - run:
+                name: conform unum to place model
+                command: python3 conform.py
+            - run:
+                name: run tests
+                command: echo "will write tests later"
+            - run:
+                name: Install AWS CLI
+                command: pip install awscli --upgrade
+            - run:
+                name: Zip Results
+                command: cd /tmp && zip -r conformed.tsv.zip conformed.tsv
+            - run:
+                name: Upload to S3
+                command: aws s3 cp /tmp/conformed.tsv.zip s3://firstdraftgis/conformed.tsv.zip
