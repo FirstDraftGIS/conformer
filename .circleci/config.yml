@@ -6,6 +6,9 @@ jobs:
         steps:
             - checkout
             - run:
+                name: Update Package Lists
+                command: apt-get update -qq            
+            - run:
                 name: Install Other System Dependencies
                 command: apt-get install -y unzip zip
             - run:
