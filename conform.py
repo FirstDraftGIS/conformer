@@ -31,6 +31,11 @@ with open(input_path) as input_file:
         for inkey, outkey in mapping:
             line[outkey] = line.pop(inkey)
 
+        # trying to handle weird cyrillic city name that's not in 
+        # expected encoding and crashing copy by having length > 1000
+        if line["name_ascii"].startswith("\302\253\320\241\320\274"):
+            line["name_ascii"] = None
+
         output_writer.writerow(line)
 
     output_file.close()
