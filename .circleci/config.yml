@@ -54,6 +54,12 @@ jobs:
           name: Clean by Testing DB Loading
           command: python3 clean_load.py
       - run:
+          name: Sample
+          command: head -1 /tmp/conformed.tsv > /tmp/conformed_sample.tsv && time shuf -n 10000 /tmp/conformed.tsv >> /tmp/conformed_sample.tsv
+      - run:
+          name: Install Pandas
+          command: pip install pandas --upgrade          
+      - run:
           name: run tests
           command: python3 test.py
       - run:

@@ -40,7 +40,7 @@ CREATE TABLE "appfd_place" (
 "dem" double precision NULL,
 "elevation" double precision NULL,
 "city" varchar(114) NULL,
-"county" varchar(10) NULL,
+"county" varchar(91) NULL,
 "country" varchar(40) NULL,
 "country_code" varchar(2) NULL,
 "state" varchar(120) NULL,
