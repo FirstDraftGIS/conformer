@@ -1,36 +1,68 @@
 version: 2
 jobs:
-    build:
-        docker:
-            - image: python:latest
-        steps:
-            - checkout
-            - run:
-                name: Update Package Lists
-                command: apt-get update -qq            
-            - run:
-                name: Install Other System Dependencies
-                command: apt-get install -y unzip zip
-            - run:
-                name: Download unum
-                command: cd /tmp && wget https://s3.amazonaws.com/firstdraftgis/unum.tsv.zip
-            - run:
-                name: Unzip Unum
-                command: cd /tmp && unzip unum.tsv.zip
-            - run:
-                name: conform unum to place model
-                command: python3 conform.py
-                no_output_timeout: 5h                
-            - run:
-                name: run tests
-                command: echo "will write tests later"
-            - run:
-                name: Install AWS CLI
-                command: pip install awscli --upgrade
-            - run:
-                name: Zip Results
-                command: cd /tmp && zip -r conformed.tsv.zip conformed.tsv
-                no_output_timeout: 1h                
-            - run:
-                name: Upload to S3
-                command: aws s3 cp /tmp/conformed.tsv.zip s3://firstdraftgis/conformed.tsv.zip
+  build:
+    docker:
+      - image: python:latest
+        environment:
+        - PG_HOST=localhost
+        - PG_USER=ubuntu
+      - image: circleci/postgres:9.5-alpine-postgis
+    steps:
+      - checkout
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for db
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Update Package Lists
+          command: apt-get update -qq
+      - run:
+          name: Install Database Dependencies
+          command: apt-get install -y postgresql postgresql-contrib postgresql-server-dev-all '^postgresql-[0-9].[0-9]-postgis-[0-9].[0-9]$'
+      - run:
+          name: Install Other System Dependencies
+          command: apt-get install -y build-essential git sudo unzip vim zip
+      - run:
+          name: Restart PostgreSQL
+          command: service postgresql restart
+      - run:
+          name: Create Postgresql USER
+          command: |
+              sudo -u postgres psql -c "CREATE ROLE $(whoami) CREATEDB LOGIN SUPERUSER"
+              sudo -u postgres psql -c "CREATE DATABASE conformer;"
+      - run:
+          name: Install PostGIS Extensions
+          command: sudo -u postgres psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology" conformer;
+      - run:
+          name: Download unum
+          command: cd /tmp && wget https://s3.amazonaws.com/firstdraftgis/unum.tsv.zip
+      - run:
+          name: Unzip Unum
+          command: cd /tmp && unzip unum.tsv.zip
+      - run:
+          name: conform unum to place model
+          command: python3 conform.py
+          no_output_timeout: 5h
+      - run:
+          name: Create Conformer Database 
+          command: sudo -u postgres psql -f migrate.sql;
+      - run:
+          name: Clean by Testing DB Loading
+          command: python3 clean_load.py
+      - run:
+          name: run tests
+          command: python3 test.py
+      - run:
+          name: Install AWS CLI
+          command: pip install awscli --upgrade
+      - run:
+          name: Zip Results
+          command: cd /tmp && zip -r conformed.tsv.zip conformed.tsv
+          no_output_timeout: 1h                
+      - run:
+          name: Upload to S3
+          command: aws s3 cp /tmp/conformed.tsv.zip s3://firstdraftgis/conformed.tsv.zip
