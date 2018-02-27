@@ -33,31 +33,31 @@ class TestDataMethods(unittest.TestCase):
 
 
     def test_admin1code(self):
-        percent = self.get_percent("admin1code")
+        percent = self.get_percent("admin1_code")
         self.assertGreaterEqual(percent, 0.001)        
 
     def test_admin2code(self):
-        percent = self.get_percent("admin2code")
+        percent = self.get_percent("admin2_code")
         self.assertGreaterEqual(percent, 0.001)
 
     def test_admin3code(self):
-        percent = self.get_percent("admin3code")
+        percent = self.get_percent("admin3_code")
         self.assertGreaterEqual(percent, 0.001)
 
     def test_admin4code(self):
-        percent = self.get_percent("admin4code")
+        percent = self.get_percent("admin4_code")
         self.assertGreaterEqual(percent, 0.001)        
 
     def test_admin_level(self):
         percent = self.get_percent("admin_level")
         self.assertGreaterEqual(percent, 0.001)
 
-    def test_asciiname(self):
-        percent = self.get_percent("asciiname")
+    def test_nae_ascii(self):
+        percent = self.get_percent("name_ascii")
         self.assertGreaterEqual(percent, 0.95)
         
-    def test_alternatenames(self):
-        percent = self.get_percent("alternate_names")
+    def test_othernames(self):
+        percent = self.get_percent("other_names")
         self.assertGreaterEqual(percent, 0.2)
         
     def test_attribution(self):
@@ -84,8 +84,8 @@ class TestDataMethods(unittest.TestCase):
         percent = self.get_percent("dem")
         self.assertGreaterEqual(percent, 0.005)
 
-    def test_display_name(self):
-        percent = self.get_percent("display_name")
+    def test_name_display(self):
+        percent = self.get_percent("name_display")
         self.assertGreaterEqual(percent, 0.01)
 
     def test_elevation(self):
@@ -96,16 +96,16 @@ class TestDataMethods(unittest.TestCase):
         percent = self.get_percent("east")
         self.assertGreaterEqual(percent, 0.001)
         
-    def test_geoname_feature_class(self):
-        percent = self.get_percent("geoname_feature_class")
+    def test_geonames_feature_class(self):
+        percent = self.get_percent("geonames_feature_class")
         self.assertGreaterEqual(percent, 0.001)
 
-    def test_geoname_feature_code(self):
-        percent = self.get_percent("geoname_feature_code")
+    def test_geonames_feature_code(self):
+        percent = self.get_percent("geonames_feature_code")
         self.assertGreaterEqual(percent, 0.001)
         
-    def test_geonameid(self):
-        percent = self.get_percent("geonameid")
+    def test_geonames_id(self):
+        percent = self.get_percent("geonames_id")
         self.assertGreaterEqual(percent, 0.001)
 
     def test_importance(self):
