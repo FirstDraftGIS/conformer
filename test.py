@@ -1,5 +1,5 @@
-from config import path_to_output
-from config import path_to_sample
+from config import output_path
+from config import sample_path
 from datetime import datetime
 import csv
 from pandas import read_csv
