@@ -34,9 +34,10 @@ jobs:
           command: |
               sudo -u postgres psql -c "CREATE ROLE $(whoami) CREATEDB LOGIN SUPERUSER"
               sudo -u postgres psql -c "CREATE DATABASE conformer;"
+              sudo -u postgres psql -c "ALTER DATABASE conformer OWNER TO $(whoami);"
       - run:
           name: Install PostGIS Extensions
-          command: sudo -u postgres psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology" conformer;
+          command: psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology" conformer;
       - run:
           name: Download unum
           command: cd /tmp && wget https://s3.amazonaws.com/firstdraftgis/unum.tsv.zip
@@ -49,7 +50,7 @@ jobs:
           no_output_timeout: 5h
       - run:
           name: Create Conformer Database 
-          command: sudo -u postgres psql -f migrate.sql;
+          command: psql -f migrate.sql conformer;
       - run:
           name: Clean by Testing DB Loading
           command: python3 clean_load.py
