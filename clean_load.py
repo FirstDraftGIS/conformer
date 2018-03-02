@@ -1,6 +1,7 @@
 from csv import DictReader
 from re import search
 from subprocess import call
+from subprocess import check_output
 from subprocess import PIPE
 from subprocess import Popen
 from time import sleep
@@ -18,11 +19,12 @@ while run_please:
     print("error_output:", error_output)
     if error_output:
         print(error_output)
-        if error_output.startswith(b'ERROR:  value too long for type'):
+        if b'ERROR:  value too long for type' in error_output:
             line_number = search(b"(?<=line )\d+", error_output).group(0).decode()
             deletion_command = "sed -i -e '" + line_number + "d' /tmp/conformed.tsv"
             print("running: " + deletion_command)
-            call(deletion_command, shell=True)
+            deletion_output = check_output(deletion_command, shell=True)
+            print("deletion_output: " + deletion_output)
         else:
             run_please = False
     else:
