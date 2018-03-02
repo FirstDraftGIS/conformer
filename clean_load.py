@@ -24,7 +24,7 @@ while run_please:
             deletion_command = "sed -i -e '" + line_number + "d' /tmp/conformed.tsv"
             print("running: " + deletion_command)
             deletion_output = check_output(deletion_command, shell=True)
-            print("deletion_output: " + deletion_output)
+            print(deletion_output)
         else:
             run_please = False
     else:
