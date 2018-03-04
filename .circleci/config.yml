@@ -37,7 +37,7 @@ jobs:
               sudo -u postgres psql -c "ALTER DATABASE conformer OWNER TO $(whoami);"
       - run:
           name: Install PostGIS Extensions
-          command: psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology" conformer;
+          command: psql -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology; CREATE EXTENSION unaccent;" conformer;
       - run:
           name: Download unum
           command: cd /tmp && wget https://s3.amazonaws.com/firstdraftgis/unum.tsv.zip
@@ -54,6 +54,15 @@ jobs:
       - run:
           name: Clean by Testing DB Loading
           command: python3 clean_load.py
+      - run:
+          name: Create Normalize Name
+          command: psql -c "UPDATE appfd_place SET name_normalized = unaccent(lower(name_ascii))" dbfd
+      - run: 
+          name: Delete Old TSV without Normalized Name
+          command: rm /tmp/conformed.tsv
+      - run:
+          name: Re-Export Conformed With Normalized Name
+          command: psql -c "COPY * TO /tmp/conformed.tsv DELIMITER E'\t' CSV HEADER"
       - run:
           name: Sample
           command: head -1 /tmp/conformed.tsv > /tmp/conformed_sample.tsv && time shuf -n 10000 /tmp/conformed.tsv >> /tmp/conformed_sample.tsv
