@@ -64,7 +64,7 @@ jobs:
           command: rm /tmp/conformed.tsv
       - run:
           name: Re-Export Conformed With Normalized Name
-          command: psql -c "COPY * FROM appfd_place TO /tmp/conformed.tsv DELIMITER E'\t' CSV HEADER" conformer
+          command: psql -c "COPY appfd_place TO /tmp/conformed.tsv DELIMITER E'\t' CSV HEADER" conformer
       - run:
           name: Sample
           command: head -1 /tmp/conformed.tsv > /tmp/conformed_sample.tsv && time shuf -n 10000 /tmp/conformed.tsv >> /tmp/conformed_sample.tsv
