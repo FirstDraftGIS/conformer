@@ -57,13 +57,13 @@ jobs:
           no_output_timeout: 1h
       - run:
           name: Create Normalize Name
-          command: psql -c "UPDATE appfd_place SET name_normalized = unaccent(lower(name_ascii))" dbfd
+          command: psql -c "UPDATE appfd_place SET name_normalized = unaccent(lower(name_ascii))" conformer
       - run: 
           name: Delete Old TSV without Normalized Name
           command: rm /tmp/conformed.tsv
       - run:
           name: Re-Export Conformed With Normalized Name
-          command: psql -c "COPY * TO /tmp/conformed.tsv DELIMITER E'\t' CSV HEADER"
+          command: psql -c "COPY * FROM appfd_place TO /tmp/conformed.tsv DELIMITER E'\t' CSV HEADER" conformer
       - run:
           name: Sample
           command: head -1 /tmp/conformed.tsv > /tmp/conformed_sample.tsv && time shuf -n 10000 /tmp/conformed.tsv >> /tmp/conformed_sample.tsv
