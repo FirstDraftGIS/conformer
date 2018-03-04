@@ -58,6 +58,7 @@ jobs:
       - run:
           name: Create Normalize Name
           command: psql -c "UPDATE appfd_place SET name_normalized = unaccent(lower(name_ascii))" conformer
+          no_output_timeout: 1h
       - run: 
           name: Delete Old TSV without Normalized Name
           command: rm /tmp/conformed.tsv
