@@ -9,12 +9,13 @@ mapping = []
 with open("mapping.txt") as f:
     for line in f:
         line = line.strip()
-        if "<=" in line:
-            _to, _from = line.replace(" ", "").split("<=")
-            mapping.append((_from, _to))
-            output_fieldnames.append(_to)
-        else:
-            output_fieldnames.append(line)
+        if line and not line.startswith("#"):
+            if "<=" in line:
+                _to, _from = line.replace(" ", "").split("<=")
+                mapping.append((_from, _to))
+                output_fieldnames.append(_to)
+            else:
+                output_fieldnames.append(line)
 
 with open(input_path) as input_file:
     reader = DictReader(input_file, delimiter="\t")

@@ -48,5 +48,8 @@ note
 population
 popularity
 timezone
-topic
 wikidata_id
+
+# foreign keys at end
+topic
+
