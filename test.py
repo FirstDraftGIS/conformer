@@ -156,5 +156,11 @@ class TestDataMethods(unittest.TestCase):
         percent = self.get_percent("enwiki_title")
         self.assertGreaterEqual(percent, 0.001)
 
+    def test_wikidata_id(self):
+        percent = self.get_percent("wikidata_id")
+        self.assertGreaterEqual(percent, 0.00001)
+
+
+
 if __name__ == '__main__':
     unittest.main()

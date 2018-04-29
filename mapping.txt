@@ -49,3 +49,4 @@ population
 popularity
 timezone
 topic
+wikidata_id

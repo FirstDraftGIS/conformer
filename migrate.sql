@@ -49,5 +49,6 @@ CREATE TABLE "appfd_place" (
 "population" bigint NULL,
 "popularity" bigint NULL,
 "timezone" text NULL,
-"topic_id" integer NULL
+"topic_id" integer NULL,
+"wikidata_id" text NULL
 );
