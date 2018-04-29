@@ -29,7 +29,7 @@ with open(input_path) as input_file:
         line["id"] = count
         line["point"] = "SRID=4326;POINT (" + line['longitude'] + " " + line["latitude"] + ")"
         for inkey, outkey in mapping:
-            line[outkey] = line.pop(inkey)
+            line[outkey] = line.pop(inkey)[:5000]
 
         output_writer.writerow(line)
 
